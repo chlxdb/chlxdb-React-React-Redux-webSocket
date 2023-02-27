@@ -1,0 +1,9 @@
+.loginBox{
+  margin: 10% auto;
+  width: 50vw;
+  height: 60vh;
+  background-color: #69b1ff;
+}
+.loginBox h2{
+  text-align: center;
+}
