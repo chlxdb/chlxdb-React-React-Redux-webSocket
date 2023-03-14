@@ -11,17 +11,16 @@ import { connect } from 'react-redux'
 }
 
 componentDidMount() {
+  
 }
   creact=async()=>{
     // this.props.history.push('/Rou/ready')
     const res = await createRooms(this.state.user)
     if(res.data.code ===200){
       //tiaozh跳转到邀请好友界面
-      // console.log(this.props);
+      console.log('room(res.data.data)',res.data.data);
     this.props.room(res.data.data)
    }
-   console.log('creactprops',this.props);
-      console.log('res',res);
       this.props.history.push('/Rou/ready')
     }
   render() {

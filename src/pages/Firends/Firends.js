@@ -1,43 +1,32 @@
-import React, { useEffect, useState,useRef,useCallback } from 'react'
-import { Row, Col, Input, Divider, Card ,Button,Pagination,message} from 'antd'
+import React, { useEffect, useState,useRef} from 'react'
+import { Row, Col, Input, Divider, Card ,Button,message} from 'antd'
 import { connect } from 'react-redux'
 import './Firends.css'
 import axios from 'axios'
 import { getChat, sendChat } from '../../axios/api';
-// import store from '../../redux/store';
-//  recodeRef.recode = res.data.data
 const { TextArea } = Input
 
 const Firends = (props) => {
-  // const clear_count = {
-  //   type: clearUnread,
-  //   extend: {
-  //   },
-  // }
- const myRef = useRef('sss')
-  const[flag,setflag]=useState(true) 
-  const [value, setValue] = useState('')
-  const [recode, setRecode] = useState([])
-  const [news,setNews]=useState()
-  const [current, setCurrent] = useState(1);
-  const [size, setSize] = useState(1000);
-  const [addSize,setAddSize]=useState(10)
-  const [height,setheight]=useState()
-  // const [ID, setID] = useState();
-  const otherId = props.match.params.id
-   var user = localStorage.getItem('userid')
-   let arr=[],arr2=[]
-   useEffect(() => {
-    setNews(props.list.msg2)
-     chatRecode()
-    //  setID(otherId)
-    //  setSize(10)
-   }, [otherId,props.list.msg2])
-
+    const myRef = useRef('sss')
+    const [value, setValue] = useState('')
+    const [recode, setRecode] = useState([])
+    const [news,setNews]=useState()
+    const [current, setCurrent] = useState(1);
+    const [size, setSize] = useState(10);
+    const otherId = props.match.params.id
+    var user = localStorage.getItem('userid')
+    let arr=[]
+    let arr2=[]
+    useEffect(() => {
+      setNews(props.list.msg2)
+      chatRecode()
+      // eslint-disable-next-line
+    }, [otherId,props.list.msg2])
 
    var chatRecode = async () => {
-    setAddSize(10)
+    // setAddSize(10)
     //暂定一页展现1000条
+    setSize(10)
     const res = await getChat({
       'anotherId': otherId,
       'current': current,
@@ -45,14 +34,41 @@ const Firends = (props) => {
       'userId': user,
     })
     if(res.data.code===200){
+      // console.log("chatres",res);
       let arr_1=res.data.data.history
-   while(arr_1.length!==0){
-    arr.push(arr_1.pop()) 
+      arr=[]
+   if(arr_1.length!==0){
+    for(let i=arr_1.length-1; i>=0 ; i--){
+      arr.push(arr_1[i]) 
+    }
     setRecode(arr)
+    // console.log('myRef',myRef);
+    // console.log('myRefcurrent',myRef.current);
+    if(current===1){
+      myRef.current.scrollTop = myRef.current.scrollHeight
     }
-    arr=[]
     }
+   
   }
+  }
+  const sendMes =async (valeus) => {
+    const res = await sendChat({
+      "content": valeus,
+      "receiverId": otherId,
+      "senderId": user,
+    }) 
+    if(res.data.code===200){
+      // chatRecode()
+      setValue('')
+      if(current === 1){
+        // 发送时若为第一页，无法触发update，需手动获取数据
+        chatRecode()
+      }else{
+        // 发送消息时，若当前页不是第一页，手动设置，以触发滚动条置底设置
+          setCurrent(1)
+      }  
+    }
+    }
  const send = () => {
   const file = document.querySelector('#input').files[0]
   const messageVo ={
@@ -62,10 +78,6 @@ const Firends = (props) => {
   const formData = new FormData()
   formData.append("file", file)
   formData.append("messageVo", JSON.stringify(messageVo))
-      //     formData.forEach((value, key) => {
-      //       console.log(`key ${key}: value ${value}`);
-      //       console.log('user',user);
-      //  })
   axios({
       url: 'http://8.134.134.68:8080/chat/transferFile',
       method: 'POST',
@@ -89,51 +101,38 @@ const Firends = (props) => {
       }
   )
  }
-const Whell=(ev)=>{
-console.log(ev);
-}
-const Scroll=(e)=>{
-  console.log(e);
-  }
-//  const Scroll = () => {
-//    //1+2=3
-//   let height1 = myRef.current.clientHeight  // 可以得到我们设置的高度 (不包括滚动的高度)
-//   let height2 = myRef.current.scrollTop  //当滚动时距离顶部的高度//网页被卷去的高
-//   // let height3 = myRef.current.scrollHeight  // 全部的高度 包括滚动的高度
-//    if( height2 ===0 ){
-//       // 加了flag 是为了防止反复触发
-//          setAddSize(addSize + 5)
-//    const loading= async () => {
-//         const res = await getChat({
-//           'anotherId': otherId,
-//           'current': current,
-//           'size': addSize,
-//           'userId': user,
-//         })
-//         if(res.data.code===200){
-//             let arr_1=res.data.data.history
-//           while(arr_1.length!==0){
-//             arr2.push(arr_1.pop()) 
+const loading= async () => {
+  setSize((size) => {
+    return size + 10
+})
+  const res = await getChat({
+    'anotherId': otherId,
+    'current': current,
+    'size': size,
+    'userId': user,
+  })
+  if(res.data.code===200){
+      let arr_2=res.data.data.history
+      if(arr_2.length!==0){
+        for(let i=arr_2.length-1; i>=0 ; i--){
+          arr2.push(arr_2[i])
+        }
         
-//             setRecode(arr2)
-//             myRef.current.scrollTop=330
-//           }
-//           arr2=[]
-//         }
-//       }
-//  loading()
-// // setflag(false)  
-// }
-//   // if(height1 + height2 + 20 > height3 )  // 当距离底部20 则会触发
-
-// }
-    
-
+    setRecode(arr2)       
+    myRef.current.scrollTop=100
+      }}}
+const Scroll=(e)=>{
+  if(e.target.scrollTo===0){
+  loading() 
+  } 
+  // console.log("scrollHeight",e.target.scrollHeight);
+  // console.log("scrollTop",e.target.scrollTop);
+  // console.log("clientHeight",e.target.clientHeight);
+}
    return (
      <>
          <Card title="Carde"  style={{ width: '80vw' }} >
-           <div className="chatRecode" ref={myRef}  onWheel={Whell} onScroll={Scroll} >
-           {/* <div className="chatRecode" ref={myRef} onScroll={Scroll} > */}
+           <div className="chatRecode" ref={myRef} onScroll={Scroll} >
              <Row>
                {recode?.map((item) => (
                  <Col
@@ -176,6 +175,7 @@ const Scroll=(e)=>{
                  autoSize={{ minRows: 5, maxRows: 5 }}
                  maxLength={200}
                />
+               <Button onClick={()=>sendMes(value)}>发送消息</Button>
              </Col>
              <Col xs={2} sm={4} md={6} lg={8} xl={1} offset={1}>
                <input type="file" id="input" ></input>

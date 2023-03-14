@@ -20,9 +20,7 @@ const Login = (props) => {
     const res = await login({"password": word,"username": name});
     if(res.data.code===200){
       props.sendAction(res.data)
-      setuserInfo(store.getState().user)
-      var storage = window.localStorage
-      storage.setItem('userid', res.data.data.id)
+      window.localStorage.setItem('userid', res.data.data.id)
       props.history.push('/Rou')
     }
   }
@@ -119,9 +117,3 @@ const mapStateToProps=(state)=>{
   }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(Login);
-// const action={
-//   type:'',
-//   value:value,
-// }
-//派发事件
-// store.dispatch(action)

@@ -21,6 +21,16 @@ export default function reducer(state = initialState, action) {
         return { ...state, msg13: action } //无权限
       case 17:
           return { ...state, msg17: action } //游戏邀请通知
+      case 19:
+      return { ...state, msg19: action } //房间通知
+      case 20:
+        return { ...state, msg20: action } //游戏开始通知
+      case 21:
+      return { ...state, msg21: action } //下棋通知
+      case 22:
+      return { ...state, msg22: action } //棋盘更新通知
+      case 23:
+      return { ...state, msg23: action } //棋盘结束通知
       case 'SET_userInfo':
         return {
           ...state,

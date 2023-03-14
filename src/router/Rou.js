@@ -18,30 +18,39 @@ import Ready from '../pages/Ready/Ready'
 import { acceptFriend } from '../axios/api';
 const { Content } = Layout
 const userId=localStorage.getItem('userid')
+
 const Menus = (props) => {
   const [firendonline, setfirendonline] = useState()
   const [firendnotOnline, setfirendnotOnline] = useState()
   const [isModalOpen, setIsModalOpen] = useState(false);
 const [modalMsg,setmodalMsg]=useState(" ")
 const [modalExtendUser,setmodalExtendUser]=useState()
-console.log('menus',props);
+// console.log('menus',props);
   const showModal = () => {
     setIsModalOpen(true);
   };
   const handleOk = async()=>{
+    // console.log("props",props);
     // console.log("e",e);
     setIsModalOpen(false);
+    //  props.ppp.history.push('/Rou/ready')
+    // props.ppp.history.push('/Rou/ready')
     const res = await acceptFriend(1, modalExtendUser,userId)
-    console.log('res', res)
+    if(res.status===200){
+      props.ppp.room(props.lists.msg19.extend.playRoomInfo)
+      // 这里要把返回的room房间信息放进store中
+      props.ppp.history.push('/Rou/ready')
+      // console.log('okres', res)
+    }
   }
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-    // const [count, setcount] = useState()
   useEffect(() => {
     setfirendonline(Object.values(props.lists.msg11.extend.online))
     setfirendnotOnline(Object.values(props.lists.msg11.extend.notOnline))
-    // console.log(typeof(props.lists.msg17.type));
+  }, [props.lists])
+  useEffect(() => {
     if(props.lists.msg17){
       // console.log(typeof(props.lists.msg17.type));
       console.log('props.lists.msg17.extend.user.id',props.lists.msg17.extend.user.id);
@@ -49,8 +58,7 @@ console.log('menus',props);
       setmodalExtendUser(props.lists.msg17.extend.user.id)
       setIsModalOpen(true);
     }
-  }, [props.lists])
-
+  }, [props.lists.msg17])
   return (
     <Menu mode="inline" >
         <Button type="primary" onClick={showModal}>
@@ -59,7 +67,7 @@ console.log('menus',props);
       <Modal title="游戏邀请"
         onOk={handleOk}
         onCancel={handleCancel}
-        cancelText="取消" 
+        cancelText="取消"
         okText="同意" 
         open={isModalOpen}>
         <p>{modalMsg.content}</p>
@@ -103,13 +111,15 @@ console.log('menus',props);
         <Link to="/Rou/manage">个人中心</Link>
       </MenuItem>
     </Menu>
-    
-  
   )
 }
 
 const Rou = (props) => {
-    console.log('Rou', props)
+  // location.reload();
+       console.log('Rou', props)
+const onon=()=>{
+ props.history.push('/Rou/ready')
+}
   return (
     <Router>
       <Row className="head">
@@ -121,23 +131,24 @@ const Rou = (props) => {
         <Col xs={2} sm={4} md={6} lg={8} xl={5}>
           <p>username</p>
           <p>ip:xxx</p>
+          <button onClick={onon}>xxx</button>
         </Col>
       </Row>
       <Row>
         <Col xs={2} sm={4} md={6} lg={8} xl={4}>
-          {props.list && <Menus lists={props.list} />}
+          {props.list && <Menus ppp={props} lists={props.list} />}
         </Col>
         <Col xs={2} sm={4} md={6} lg={8} xl={20} offset={0}>
           <Content>
             <div style={{ height: '91vh' }}>
               <Switch>
                 {/* <Route path='/' exact component={User}></Route> */}
-                <Route path="/Rou/add" component={Add} />
-                <Route path="/Rou/firends/:id" component={Firends} />
-                <Route path="/Rou/play:id" component={Play} />
-                <Route path="/Rou/createroom" component={createRoom} />
-                <Route path="/Rou/ready" component={Ready} />
-                <Route path="/Rou/manage" component={User} />
+                <Route path="/Rou/add" component={Add}/>
+                <Route path="/Rou/firends/:id" component={Firends}/>
+                <Route path="/Rou/play:id" component={Play}/>
+                <Route path="/Rou/createroom" component={createRoom}/>
+                <Route path="/Rou/ready" component={Ready}/>
+                <Route path="/Rou/manage" component={User}/>
               </Switch>
             </div>
           </Content>
@@ -152,5 +163,20 @@ const mapStateToProps = (state) => {
     ...state,
   }
 }
-
-export default connect(mapStateToProps, null)(Rou)
+const mapDispatchToProps = (dispatch)=> {
+  return{
+    room:(b)=>{
+      dispatch({
+        type:'roomInfo',
+        values:b
+      })
+    },
+    setUser:(b)=>{
+      dispatch({
+        type:'SET_userInfo',
+        values:b
+      })
+    },
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Rou)

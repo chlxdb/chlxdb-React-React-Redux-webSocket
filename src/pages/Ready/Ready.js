@@ -4,6 +4,8 @@ import {Row, Button, Col, Drawer, } from 'antd';
 import Play from '../Play'
 import { connect } from 'react-redux';
 import { start } from '../../axios/api';
+
+import './Ready.css'
 class Ready extends Component {
 constructor(props){
   super (props)
@@ -11,30 +13,23 @@ constructor(props){
 open:true,
 childrenOpen:false,
 firends:[],
-roomid:''
+roomid:'',
+
   }
 }
 componentDidMount=(props)=>{
-  // const objOnline = store.getState().list.msg11.extend.online
-  // console.log('object',objOnline);
-  console.log('000',this.props);
-  console.log('no',Object.values(this.props.list.msg11.extend.notOnline));
 this.setState({firends:Object.values(this.props.list.msg11.extend.online)})
-
 }
-// componentDidUpdate(prevProps) {
-//   // 典型用法（不要忘记比较 props）：
-//   if (this.props.userID !== prevProps.userID) {
-//     this.fetchData(this.props.userID);
-//   }
-// }
+
 outRoom = async(userid)=>{
   const res = await outRooms(userid)
-  console.log('res',res)
+  if (res.status===200) {
+    this.props.history.push('/Rou/createroom')
+  }
 }
 start = async(roomid,userid)=>{
   const res = await start(roomid,userid)
-  console.log('res',res)
+  console.log('readOkres',res)
 }
 showDrawer = () => {
   this.setState({open:true});
@@ -58,7 +53,6 @@ onChildrenDrawerClose = () => {
     const userid=localStorage.getItem('userid')
     const roomid=this.props.list.room.id
     const {open,childrenOpen,firends}=this.state
-    // console.log('fff',firends);
     return (
       <>
       <Row>
@@ -70,21 +64,22 @@ onChildrenDrawerClose = () => {
         邀请好友开局
       </Button>
       </Col>
-    
-      <Drawer title="邀请已在线的好友"  placement="right"  closable={false} onClose={this.onClose} open={open}>
+      <Drawer title="邀请已在线的好友"  placement="right"  closable={false}  open={open}>
         <Button type="primary" onClick={this.showChildrenDrawer}>
         邀请好友开局
       </Button>
       <p>邀请成功</p>
-      <p onClick={this.onClose}>重新开始</p>
-      <button onClick={()=>this.start(roomid,userid)}>点击开始</button>
-      <button onClick={()=>this.outRoom(userid)}>退出房间</button>
+      <button onClick={this.onClose}>重新开始</button>
+      <br></br>
+      <button id='readybtn' onClick={()=>this.start(roomid,userid)}>准备就绪</button>
+      <br></br>
+      <button id='leavebtn' onClick={()=>this.outRoom(userid)}>退出房间</button>
         <Drawer
-          title="Two-level Drawer"
+          title="邀请列表"
           width={320}
           onClose={this.onChildrenDrawerClose}
           open={childrenOpen}
-        >
+        > 
           {
             firends.map((element, id)=>{
               return(<p key={id}> {element.username} <Button onClick={()=>this.invit(element.id,userid)} type="link"  style={{ marginLeft:'20%',background:'yellow'}}>邀请</Button></p>)  

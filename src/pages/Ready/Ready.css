@@ -1,0 +1,22 @@
+#readybtn{
+  width: 100%;
+  height: 30%;
+  font-size: 1.5rem;
+  background-color: rgb(94, 154, 238);
+  border-color:rgb(94, 154, 238);
+  border-radius:  5px ;
+  color: white;
+  margin-top: 20%;
+  margin-bottom: 20%;
+}
+ #readybtn:hover{
+  font-size: 2rem;
+  background-color: rgb(76, 134, 216);
+  border-color:rgb(76, 134, 216)
+}
+#leavebtn{
+  width: 100%;
+  font-size: larger;
+  background-color: rgb(136, 177, 228);
+  border-color:  rgb(136, 177, 228);
+}

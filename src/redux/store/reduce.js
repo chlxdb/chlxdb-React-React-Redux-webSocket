@@ -2,30 +2,12 @@
 const defaultState={
 id:1
 }
-
-export default function reducer(state=defaultState,action){
-  // state=action.infoType
-  // console.log('reducer',action.type);
-  // console.log('reducer',action.type===8);
-  
+export default function reducer(state=defaultState,action){  
   switch(action.type){
-    case 8:
-      return{
-       ...state , msg8:action.infoType
-        // .notOnline
-      };
-    case 11:
-      return{
-        ...state, msg11:action.infoType
-      };
     case "SET_userInfo":
       return{
         ...state, user:action.values.data.id
       };
-    // case 11:
-    //   return{
-    //     msg11:action.data
-    //   }
     default:
       return state;
   

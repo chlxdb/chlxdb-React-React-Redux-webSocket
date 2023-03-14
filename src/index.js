@@ -8,35 +8,6 @@ import reducer from '../src/redux/reducers'
 import './index.css'
 import App from './App'
 const firendListMiddleware = (store) => (next) => (action) => {
-  // if (action.type === "clearUnread") {
-  //   const objNOTonline = store.getState().list.msg11.extend.notOnline
-  //   const objOnline = store.getState().list.msg11.extend.online
-  //   // 将js对象类型转化为map类型
-  //   const list_Not = new Map(Object.entries(objNOTonline))
-  //   const list_on = new Map(Object.entries(objOnline))
-  //   const type_Info = new Map(Object.entries(action.extend))
-  //   type_Info.forEach((val, key) => {
-  //     // console.log(`${key} -> ${val}`)
-  //     if (list_Not.has(key)) {
-  //  list_Not.get(key).unreadCount = val
-  //       console.log('list_Not.get(key)zuihou', list_Not.get(key))
-  //     }
-  //     else if (list_on.has(key)) {
-  //       list_on.get(key).unreadCount = val
-  //       console.log('list_on.get(key)zuihou', list_on.get(key))
-  //     }
-  //   })
-  //   const clearCount = {
-  //     type: 11,
-  //     extend: {
-  //       online: Object.fromEntries(list_on.entries()),
-  //       notOnline: Object.fromEntries(list_Not.entries()),
-  //     },
-  //   }
-  //       store.dispatch(clearCount)
-  //   }
-    
-//  }
   if (action.type === 8) {
     // console.log('88888',action.extend);
     // const list_14 = new Map()
@@ -50,11 +21,11 @@ const firendListMiddleware = (store) => (next) => (action) => {
       // console.log(`${key} -> ${val}`)
       if (list_8_Not.has(key)) {
    list_8_Not.get(key).unreadCount = val
-        console.log('list_8_Not.get(key)zuihou', list_8_Not.get(key))
+        // console.log('list_8_Not.get(key)zuihou', list_8_Not.get(key))
       }
       else if (list_8_on.has(key)) {
         list_8_on.get(key).unreadCount = val
-        console.log('list_8_on.get(key)zuihou', list_8_on.get(key))
+        // console.log('list_8_on.get(key)zuihou', list_8_on.get(key))
       }
     })
     const res_type8 = {
@@ -98,8 +69,8 @@ const list_15_on = new Map(Object.entries(objOnline))
     action.extend.offLinedFriendInfo.id,
     action.extend.offLinedFriendInfo
   )
-    console.log('list_15_on', list_15_on)
-     console.log('list_15_Not', list_15_Not)
+    // console.log('list_15_on', list_15_on)
+    //  console.log('list_15_Not', list_15_Not)
     const res_type15 = {
       type: 11,
       extend: {
@@ -142,7 +113,7 @@ let reconnect = (url) => {
   //没连接上会一直重连，设置延迟避免请求过多
   setTimeout(function () {
     createWebSocket(url)
-    lockReconnect = false
+    lockReconnect = false                                    
   }, 4000)
 }
 let heartCheck = {
