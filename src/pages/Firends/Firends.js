@@ -14,15 +14,15 @@ const Firends = (props) => {
     const [current, setCurrent] = useState(1);
     const [size, setSize] = useState(10);
     const otherId = props.match.params.id
-    var user = localStorage.getItem('userid')
+    var user = props.user.user
     let arr=[]
     let arr2=[]
     useEffect(() => {
+      console.log('firendprops',props);
       setNews(props.list.msg2)
       chatRecode()
       // eslint-disable-next-line
     }, [otherId,props.list.msg2])
-
    var chatRecode = async () => {
     // setAddSize(10)
     //暂定一页展现1000条
@@ -47,7 +47,7 @@ const Firends = (props) => {
     if(current===1){
       myRef.current.scrollTop = myRef.current.scrollHeight
     }
-    }
+  }
    
   }
   }
@@ -102,28 +102,29 @@ const Firends = (props) => {
   )
  }
 const loading= async () => {
-  setSize((size) => {
-    return size + 10
-})
+  setSize((size) => {return size + 10})
   const res = await getChat({
     'anotherId': otherId,
     'current': current,
     'size': size,
     'userId': user,
   })
+  console.log('res',res);
   if(res.data.code===200){
       let arr_2=res.data.data.history
       if(arr_2.length!==0){
         for(let i=arr_2.length-1; i>=0 ; i--){
           arr2.push(arr_2[i])
-        }
-        
+        }    
     setRecode(arr2)       
     myRef.current.scrollTop=100
-      }}}
-const Scroll=(e)=>{
-  if(e.target.scrollTo===0){
-  loading() 
+      }
+    }
+    }
+  const Scroll=(e)=>{
+  if(e.target.scrollTop===0){
+    // console.log("scrollTop",e.target.scrollTop);
+    loading() 
   } 
   // console.log("scrollHeight",e.target.scrollHeight);
   // console.log("scrollTop",e.target.scrollTop);

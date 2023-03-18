@@ -1,15 +1,17 @@
-// // import actions from './actions'
+// import actions from './actions'
 
-// const initialState = []
+const initialState = []
 
-// export default function reducer(state = initialState, action) {
-//   console.log('usersaction:',action);
-//     // switch(action.type) {
-//     //     case actions.USER_JOINS_ROOM:
-//     //         return [...state,]
-
-//     //     case actions.USER_LEAVES_ROOM:
-//     //         return state.filter(user => user.id !== action.data.id)
-//     // }
-//     return state
-// }
+export default function reducer(state = initialState, action) {
+  console.log('usersaction:',action);
+    switch(action.type) {
+      case 'SET_userInfo':
+        return {
+          ...state,
+          user: action.values.data.id,
+          userData:action.values.data
+        }
+        default:
+          return state
+      }
+}

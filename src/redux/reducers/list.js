@@ -1,6 +1,4 @@
-
 const initialState = []
-
 export default function reducer(state = initialState, action) {
   console.log('action',action);
  
@@ -31,11 +29,6 @@ export default function reducer(state = initialState, action) {
       return { ...state, msg22: action } //棋盘更新通知
       case 23:
       return { ...state, msg23: action } //棋盘结束通知
-      case 'SET_userInfo':
-        return {
-          ...state,
-          user: action.values.data.id,
-        }
       case 'roomInfo':
         return {
           ...state,

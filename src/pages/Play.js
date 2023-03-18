@@ -1,5 +1,5 @@
 
-import { Col, Row } from 'antd';
+import { Button, Col, Row } from 'antd';
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import axios from 'axios'
@@ -54,7 +54,7 @@ componentDidUpdate(prevProps) {
   }
 }
 check=async()=>{
-  const res = await checkRoom(this.props.list.user);
+  const res = await checkRoom(this.props.user.user);
   if(res.status===200){
     if(res.data.data.havePlayRoom===true){
      let arr=res.data.data.playRoomInfo.square
@@ -76,7 +76,6 @@ check=async()=>{
        }
      }
     }
-    // console.log('playcheck',res.data);
   }
   
 }
@@ -130,7 +129,7 @@ if(sym===1){
   "golangPiecesType": sym,
   "m": x,
   "n": y,
-  "userId": this.props.list.user
+  "userId": this.props.user.user
   }
   axios({
       url: 'http://8.134.134.68:8080/gobang/play',
@@ -169,8 +168,8 @@ if(sym===1){
           <Col xs={2} sm={4} md={6} lg={24} xl={5} offset={10}>
             {/* <h1>已进行xxxxshichang</h1> */}
           <h1>当前执棋：“黑”</h1>
-          <h2>结束游戏</h2>
-          <h3>退出房间</h3>
+          <Button type='link' >结束游戏</Button>
+          <Button type='link' >退出房间</Button>
           </Col>
         </Row>
  </div>

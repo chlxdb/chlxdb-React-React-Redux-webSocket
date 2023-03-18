@@ -1,5 +1,5 @@
 import React from 'react'
-import{BrowserRouter as Router,Route,Switch} from 'react-router-dom'
+import{BrowserRouter as Router,Route,Switch,withRouter} from 'react-router-dom'
 import { connect } from 'react-redux';
 import Rou from './router/Rou'
 import 'antd/dist/reset.css';
@@ -17,6 +17,7 @@ function App(props) {
           <Route path="/login" component={Login}></Route>
           <Route path="/play" component={Play}></Route>
           <Route path="/firend" component={Firends}></Route>
+          <Route path="/"  component={Login}></Route>
         </Switch>
       </Router>
     </div>
@@ -49,4 +50,4 @@ const mapStateToProps=(state)=> {
       Info: state
   }
 }
-export default connect(mapStateToProps,null)(App) ;
+export default withRouter(connect(mapStateToProps,null)(App)) ;

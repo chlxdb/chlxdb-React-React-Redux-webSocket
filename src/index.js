@@ -3,10 +3,24 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import '../src/axios/config'
 import { Provider } from 'react-redux'
-import { createStore, compose, applyMiddleware } from 'redux'
+import {legacy_createStore as createStore } from "redux";
+import { compose, applyMiddleware } from 'redux'
+
+import {persistStore, persistReducer} from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
+import {PersistGate} from 'redux-persist/lib/integration/react';
 import reducer from '../src/redux/reducers'
 import './index.css'
 import App from './App'
+const persistConfig = {
+  key: 'root',
+  storage: storage,
+  whitelist: ['user','list'],//设置白名单
+  // blacklist: ['list'],
+  stateReconciler: autoMergeLevel2 // 查看 'Merge Process' 部分的具体情况
+}
+
 const firendListMiddleware = (store) => (next) => (action) => {
   if (action.type === 8) {
     // console.log('88888',action.extend);
@@ -83,9 +97,11 @@ const list_15_on = new Map(Object.entries(objOnline))
     next(action) 
   }
 }
-
+const myPersistReducer = persistReducer(persistConfig, reducer)
+// const store = createStore(myPersistReducer)
 const firendListCreateStore = compose(applyMiddleware(firendListMiddleware))(createStore)
-const store = firendListCreateStore(reducer) //使用createStore创建个store
+const store = firendListCreateStore(myPersistReducer) //使用createStore创建个store
+const persistor = persistStore(store)
 let websocket,lockReconnect = false
 let createWebSocket = (url) => {
   websocket = new WebSocket(url)
@@ -146,31 +162,9 @@ const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   <BrowserRouter>
     <Provider store={store}>
+   < PersistGate loading={null} persistor={persistor}>
       <App />
+     </PersistGate>
     </Provider>
   </BrowserRouter>
 )
-// if (action.type === 11) {
-  //   console.log(action);
-  //   const res_type8 = {
-  //     type: 111,
-  //     extend: {
-  //       online: Object.values(action.extend.online) ,
-  //       notOnline:Object.values(action.extend.notOnline) ,
-  //     },
-  //   }
-  //   store.dispatch(res_type8)
-  // }
-   // var arrRemoveInfo = function (arr, value) {
-  //   if (!arr || arr.length === 0) {
-  //     return ''
-  //   }
-    
-  //   let newArr = arr.filter(function (item, index) {
-  //     return item.id !== value
-  //   })
-  //   var newmap = new Map() 
-  //   newArr.map((item) => newmap.set(item.id, item))
-  //     console.log("newarr",newmap);
-  //     return newmap
-  // }

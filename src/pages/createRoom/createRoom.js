@@ -6,16 +6,13 @@ import { connect } from 'react-redux'
  constructor(props){
   super(props);
   this.state={
-     user:window.localStorage.getItem("userid")
   }
 }
-
 componentDidMount() {
-  
 }
   creact=async()=>{
     // this.props.history.push('/Rou/ready')
-    const res = await createRooms(this.state.user)
+    const res = await createRooms(this.props.user.user)
     if(res.data.code ===200){
       //tiaozh跳转到邀请好友界面
       console.log('room(res.data.data)',res.data.data);
@@ -32,10 +29,7 @@ componentDidMount() {
       </Row>
     )
   }
-
 }
-
-
 const mapDispatchToProps = (dispatch)=> {
   return{
     room:(b)=>{

@@ -20,7 +20,6 @@ const Login = (props) => {
     const res = await login({"password": word,"username": name});
     if(res.data.code===200){
       props.sendAction(res.data)
-      window.localStorage.setItem('userid', res.data.data.id)
       props.history.push('/Rou')
     }
   }

@@ -28,7 +28,12 @@ outRoom = async(userid)=>{
   }
 }
 start = async(roomid,userid)=>{
+  this.setState({open:false});
   const res = await start(roomid,userid)
+// if(res.status===200){
+//   this.setState({open:false});
+//   console.log('readOkres',res)
+// }
   console.log('readOkres',res)
 }
 showDrawer = () => {
@@ -50,7 +55,7 @@ onChildrenDrawerClose = () => {
   console.log('res', res)
 }
   render() {
-    const userid=localStorage.getItem('userid')
+    const userid=this.props.user.user
     const roomid=this.props.list.room.id
     const {open,childrenOpen,firends}=this.state
     return (
@@ -59,19 +64,14 @@ onChildrenDrawerClose = () => {
         <Col xs={2} sm={4} md={6} lg={24} xl={18} offset={2}>
        < Play></Play>
        </Col>
-       <Col style={{marginTop:"10%"}} xs={2} sm={4} md={6} lg={24} xl={2} offset={1}>
-      <Button type="primary" onClick={this.showDrawen}>
-        邀请好友开局
-      </Button>
-      </Col>
+     
       <Drawer title="邀请已在线的好友"  placement="right"  closable={false}  open={open}>
         <Button type="primary" onClick={this.showChildrenDrawer}>
         邀请好友开局
       </Button>
-      <p>邀请成功</p>
-      <button onClick={this.onClose}>重新开始</button>
+      <Button type='link' onClick={this.onClose}>重新开始</Button>
       <br></br>
-      <button id='readybtn' onClick={()=>this.start(roomid,userid)}>准备就绪</button>
+      <Button id='readybtn' type='link'  onClick={()=>this.start(roomid,userid)}>准备就绪</Button>
       <br></br>
       <button id='leavebtn' onClick={()=>this.outRoom(userid)}>退出房间</button>
         <Drawer

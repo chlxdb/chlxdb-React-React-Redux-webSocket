@@ -1,88 +1,74 @@
+
 import React,{ useEffect,useState} from 'react'
 import {connect }from "react-redux";
-import { Input,Col, Row,Avatar, List,Card} from 'antd';
+import { Input,Col, Row,Avatar, List,Card,Button} from 'antd';
 import './Add.css'
-import { friendReq, login,getChat ,searchFirend} from '../../axios/api';
-
-
-
+import { friendReq ,searchFirend,addFriend} from '../../axios/api';
 const Add=(props)=> {
+  const [view,setView]=useState("none")
    const [searchres, setSearchRes] = useState('')
+   const [requestList,setRequestList]=useState('')
   useEffect(() => {
-    console.log('props',props);
-  }, )
-
+    // console.log('props',props);
+    getfriendReq(props.user.user)
+  },[props.user.user])
   const { Search } = Input;
-
-  const data = [
-    {
-      title: 'Ant Design Title 1',
-    },
-    {
-      title: 'Ant Design Title 2',
-    },
-    {
-      title: 'Ant Design Title 3',
-    },
-    {
-      title: 'Ant Design Title 4',
-    },
-  ];
   const onSearch = async(value) =>{
-    // console.log(value);
-     const res = await searchFirend({
-       id: props.list.user,
-       username:value
-     })
-     if(res.status===200){
-      setSearchRes(res.data.data)
-      console.log("fr",res.data.data);
-     }
+    if(value && value!==' '){
+      const res = await searchFirend({
+        id: props.user.user,
+        username:value
+      })
+      if(res.status===200){
+       setSearchRes(res.data.data)
+       setView('block')
+       console.log("fr",res.data.data);
+      }
+      else{
+        console.log(value);
+      }
     }
-  const getfriendReq = async () => {
-    const res = await friendReq({  id:1599245134922842114n});
+    }
+  const getfriendReq = async (userid) => {
+    const res = await friendReq({  id:userid});
+    if(res.data.code===200){
+      console.log("fa",res.data.data);
+      setRequestList(res.data.data)
+    }
+  }
+  const add = async () => {
+    const res = await addFriend({  
+      "receiveUserVo": {
+          "enabled": true,
+          "gender": searchres.gender,
+          "id": searchres.id,
+          "profile": "http://8.134.134.68/profile/profile.png",
+          "username": searchres.username
+     },
+     "remark": "string",
+     "userVo": {
+       ...props.user.userData
+     },
+    });
         console.log(res.data);
   }
-  const toLogin = async () => {
-    const res = await login({   "password": "121","username": "chl"});
-        console.log(res.data);
-  }
-  const chatRecode = async () => {
-    const res = await getChat({
-      'anotherId': '1599245134922842114',
-      'current': 1,
-      'size': 5,
-      'userId': '1598252657034199041',
-    })
-    console.log('res', res)
-  }
-  
   const btn = function () {
-    chatRecode()
-    getfriendReq()
-    toLogin()
-  // axios({
-  //   url:'/get',
-  //   params:{name:"xxx",age:18},
-  //  method:'get'
-  // }).then(
-  //  res=>{console.log(res.data)} 
-  // ) 
-  
+    add()
   }
-
   return (
    <div className='contentBox'>
 <Row>
-<Col xs={2} sm={4} md={6} lg={8} xl={6} offset={5} >
-    <Search className='addSearch' size='large' placeholder="输入用户ID或者用户名查找" onSearch={onSearch} enterButton />
-    <button onClick={btn}>axios</button>
+<Col xs={2} sm={4} md={6} lg={8} xl={6} offset={5}>
+    <Search className='addSearch' size='large' placeholder="输入用户名查找" onSearch={onSearch} enterButton />
     </Col>
 </Row>
 <Row>
-<Col xs={2} sm={4} md={6} lg={8} xl={6} offset={5} >
-<Card className='addCard'>
-    <p>Card content</p>
+<Col xs={2} sm={4} md={6} lg={8} xl={6} offset={5}>
+<Card className='addCard'  style={{display:view}}>
+    <Avatar  src={searchres.profile} shape="square" size="small"/>
+    <span>{searchres.username}: {searchres.id}</span><span> </span>
+    <span>性别：{searchres.gender}</span>
+    <Button type="primary" size='small' style={{marginLeft:'15%'}} onClick={btn}>添加</Button>
   </Card>
     </Col>
 </Row>
@@ -91,13 +77,13 @@ const Add=(props)=> {
     <h3>添加请求</h3>
     <List
     itemLayout="horizontal"
-    dataSource={data}
+    dataSource={requestList}
     renderItem={(item) => (
       <List.Item>
         <List.Item.Meta
-          avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
-          title={<a href="https://ant.design">{item.title}</a>}
-          description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+          avatar={<Avatar src={item.friendInfo.profile}/>}
+          title={<a href="https://ant.design">{item.friendInfo.username}</a>}
+          description={item.status===3? "已添加" : item.status===2? "已拒绝" : "待处理"}
         />
       </List.Item>
     )}
